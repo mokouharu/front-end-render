@@ -1,0 +1,231 @@
+@px: 320/750/16*1rem;
+@percent: 100/750*1%;
+@color: #ccc;
+/*
+只需要添加className即可添加1px边框，如：
+<div class="bbOnepx"></div>
+一共5个类：btOnepx(上边框) brOnepx(右边框) bbOnepx(底边框) blOnepx(左边框) ballOnepx(四个边框)
+*/
+
+/**1px fix solutions,from http://frontenddev.org/link/mobile-phone-1-px-retina-screen-border.html****/
+/*如果支持0.5px border这样的设备，js会在html上添加hairlines这个class，否则添加notHairlines这个class；
+如果支持hairlines，直接通过border-width为0.5px这样设置；否则通过befor/after伪元素来模拟边框，然后通过scale缩小为0.5倍*/
+
+
+.btOnepx {
+    border-top: 1px solid @color;
+}
+.brOnepx {
+    border-right:1px solid @color;
+}
+.bbOnepx {
+    border-bottom: 1px solid @color;
+}
+.blOnepx{
+    border-left: 1px solid @color;
+}
+.ballOnepx{
+    border: 1px solid @color;
+}
+
+
+.hairlines .btOnepx {
+    border-top: 0.03125rem solid @color;
+}
+.hairlines .brOnepx {
+    border-right:0.03125rem solid @color;
+}
+.hairlines .bbOnepx {
+    border-bottom: 0.03125rem solid @color;
+}
+.hairlines .blOnepx{
+    border-left: 0.03125rem solid @color;
+}
+.hairlines .ballOnepx{
+    border: 0.03125rem solid @color;
+}
+
+
+
+
+/*不支持0.5px border小数的设备,通过伪元素定位来实现1px border，border-top，border-left通过:before来实现,border-right,border-bottom,4个border都是1px采用:after来实现*/
+
+.notHairlines .btOnepx, .notHairlines .brOnepx,.notHairlines .bbOnepx, .notHairlines .blOnepx,.notHairlines .ballOnepx{
+    position:relative;
+}
+
+
+/*上，下边框*/
+.notHairlines .btOnepx:before,
+.notHairlines .bbOnepx:after {
+    position: absolute;
+    content: "";
+    background-color: @color;
+    height: 1px;
+    left: 0;
+    right: 0;
+}
+
+.notHairlines .btOnepx:before {
+    top: 0;
+}
+
+.notHairlines .bbOnepx:after {
+    bottom: 0;
+}
+
+/*左，右边框*/
+
+.notHairlines .blOnepx:before,
+.notHairlines .brOnepx:after {
+    position: absolute;
+    content: "";
+    background-color: @color;
+    width:1px;
+    top: 0;
+    bottom: 0;
+}
+
+.notHairlines .blOnepx:before {
+    left: 0;
+}
+
+.notHairlines .brOnepx:after {
+    right: 0;
+}
+
+// 屏蔽掉盒子的border用after的border实现
+.notHairlines .ballOnepx {
+    border: none;
+}
+.notHairlines .ballOnepx:after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border: 1px solid @color;
+    point-events: none;
+}
+/* 最后两个是为了检测Mobile ie9, 是因为Mobile IE9检测出的dpi为96dpi，与实际不符合 */
+
+@media (min--moz-device-pixel-ratio: 1.5),
+(-webkit-min-device-pixel-ratio: 1.5),
+(min-device-pixel-ratio: 1.5),
+(min-resolution: 144dpi),
+(min-resolution: 1.5dppx),
+(-ms-high-contrast:active),
+(-ms-high-contrast:none) {
+
+    /*上，左边框, 四边边框*/
+    .notHairlines .btOnepx:before,
+    .notHairlines .blOnepx:before,
+    .notHairlines .ballOnepx:after {
+        -webkit-transform-origin: 0 0;
+        -moz-transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+        -o-transform-origin: 0 0;
+        transform-origin: 0 0;
+    }
+    /*下，右边框*/
+    .notHairlines .bbOnepx:after,
+    .notHairlines .brOnepx:after {
+        -webkit-transform-origin: 100% 100%;
+        -moz-transform-origin: 100% 100%;
+        -ms-transform-origin: 100% 100%;
+        -o-transform-origin: 100% 100%;
+        transform-origin: 100% 100%;
+    }
+}
+/* 解决1.5屏幕下某些边框不显式问题 */
+
+@media (-webkit-device-pixel-ratio: 1.5) {
+    /*上，下边框*/
+    .notHairlines .btOnepx:before,
+    .notHairlines .bbOnepx:after {
+        -webkit-transform: scaleY(.66666666);
+        -ms-transform: scaleY(.66666666);
+        -o-transform: scaleY(.66666666);
+        transform: scaleY(.66666666);
+    }
+    /*左，右边框*/
+    .notHairlines .blOnepx:before,
+    .notHairlines .brOnepx:after {
+        -webkit-transform: scaleX(.6666);
+        -ms-transform: scaleX(.6666);
+        -o-transform: scaleX(.6666);
+        transform: scaleX(.6666);
+    }
+    /*四边框*/
+    .notHairlines .ballOnepx:after {
+        width: 150%;
+        height: 150%;
+        -webkit-transform: scale(.6666);
+        -ms-transform: scale(.6666);
+        -o-transform: scale(.6666);
+        transform: scale(.6666);
+    }
+}
+
+/* 解决dpr=2屏幕*/
+
+@media (-webkit-device-pixel-ratio: 2) {
+    /*上，下边框*/
+    .notHairlines .btOnepx:before,
+    .notHairlines .bbOnepx:after {
+        -webkit-transform: scaleY(.5);
+        -ms-transform: scaleY(.5);
+        -o-transform: scaleY(.5);
+        transform: scaleY(.5);
+    }
+    /*左，右边框*/
+    .notHairlines .blOnepx:before,
+    .notHairlines .brOnepx:after {
+        -webkit-transform: scaleX(.5);
+        -ms-transform: scaleX(.5);
+        -o-transform: scaleX(.5);
+        transform: scaleX(.5);
+    }
+    /*四边边框*/
+    .notHairlines .ballOnepx:after {
+        width: 200%;
+        height: 200%;
+        -webkit-transform: scale(.5);
+        -ms-transform: scale(.5);
+        -o-transform: scale(.5);
+        transform: scale(.5);
+    }
+}
+
+/* 解决dpr=3屏幕*/
+@media (-webkit-device-pixel-ratio: 3) {
+    /*上，下边框*/
+    .notHairlines .btOnepx:before,
+    .notHairlines .bbOnepx:after {
+        -webkit-transform: scaleY(.3333);
+        -ms-transform: scaleY(.3333);
+        -o-transform: scaleY(.3333);
+        transform: scaleY(.3333);
+    }
+    /*左，右边框*/
+    .notHairlines .blOnepx:before,
+    .notHairlines .brOnepx:after {
+        -webkit-transform: scaleX(.3333);
+        -ms-transform: scaleX(.3333);
+        -o-transform: scaleX(.3333);
+        transform: scaleX(.3333);
+    }
+    /*四边框*/
+    .notHairlines .ballOnepx:after {
+        width: 300%;
+        height: 300%;
+        -webkit-transform: scale(.3333);
+        -ms-transform: scale(.3333);
+        -o-transform: scale(.3333);
+        transform: scale(.3333);
+    }
+}
