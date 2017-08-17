@@ -1,10 +1,18 @@
+
 const Koa = require('koa')  // 创建一个koa实例
+  , cors = require('koa2-cors')  // 跨域请求
   , controller = require('./routes/controller.js')  // 指定路由
   , json = require('koa-json')  // json格式优化
   , bodyParser = require('koa-bodyparser') // body数据解析
   , onerror = require('koa-onerror');  // 日志
 
 const app = new Koa();
+
+app.use(cors({
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'DELETE'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
 // 解析body
 app.use(bodyParser());
 
@@ -31,4 +39,4 @@ app.on('error', function(err,ctx) {
   utils.print(err);
 })
 
-app.listen(3000);
+app.listen(30001);

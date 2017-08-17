@@ -9,12 +9,13 @@ var vueLoaderConfig = require('./vue-loader.conf')
 
 // 绝对路径
 function resolve (dir) {
+  console.log('dirname:', __dirname);
   return path.join(__dirname, '..', dir)
 }
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: ['src/main.js']
   },
   output: {
     // 编译输出的根路径
@@ -31,7 +32,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     modules: [
       resolve('src'),
-      resolve('node_modules')
+      path.join(__dirname, '../..', 'node_modules')
     ],
     alias: {
       'vue$': 'vue/dist/vue.js',
@@ -43,23 +44,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

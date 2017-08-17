@@ -5,10 +5,7 @@ import App from './App';
 import Router from 'vue-router';
 import Axios from 'axios';
 import VueTouch from 'vue-touch';
-import VueLazyLod from 'vue-lazyload';
-import Log from './libs/leStatic';
 import flexible from './libs/flexible';
-import Cookies from './libs/cookie';
 
 const app = {
     launch () {
@@ -33,16 +30,13 @@ const app = {
 
         window.$axios = Axios.create({
             // 自动添加在url前面
-            baseURL: "https://zhuan.58.com/zz/transfer/",
+            baseURL: "http://localhost:30001/zztest/",
             // 请求超时的毫秒数
             timeout: 5000,
             // 跨域请求是否需要使用凭证
             withCredentials: true
         });
 
-        // 获取uid
-        window.UID = Cookies.getUID();
-        window.TK = Cookies.getToken();
         // 修正hash
         this.correctHashRoute();
 
@@ -66,21 +60,11 @@ const app = {
     },
     initPlug () {
         Vue.use(Router);
-        // 乐高统计
-        Vue.use(Log);
         Vue.use(VueTouch);
 
-        // Vue.use(VueResource);
         VueTouch.config.swipe = {
             direction: 'horizontal'
         };
-        Vue.use(VueLazyLod, {
-            preLoad: 1.3,
-            try: 2
-        });
-        // Vue.http.options.xhr = { withCredentials: true };
-        // Vue.http.options.root = 'https://zhuan.58.com/';
-        // Vue.http.options.root = 'http://localhost:3000';
     },
     correctHashRoute () {
         let url = location.href,
@@ -103,22 +87,12 @@ const app = {
     },
     createRoutes () {
         return [{
-            // path: '/rankList',
             path: '/',
-            name: 'PrizeTask', // 个性化好卖榜单
+            name: 'userList', // 个性化好卖榜单
             component (resolve) {
-                require(['./components/PrizeTask/PrizeTask.vue'], resolve);
+                require(['./components/UserList/UserList.vue'], resolve);
             }
-        },
-            {
-                // path: '/rankList',
-                path: '/rankList',
-                name: 'rankList', // 个性化好卖榜单
-                component (resolve) {
-                    require(['./components/rankList/rankList.vue'], resolve);
-                }
-            }
-        ];
+        }];
     }
 };
 

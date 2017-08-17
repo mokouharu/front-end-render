@@ -1,3 +1,7 @@
+/**
+ * Created by zhj on 17/8/16.
+ */
+
 const tarMongo = require('../config/index');
 const Promise = require('es6-promise');
 // Schema 结构
@@ -8,7 +12,7 @@ let tarSchema = new tarMongo.mongoose.Schema({
         userid: {type: String},
 });
 
-// 添加 mongoose 静态方法，静态方法在Model层就能使用
+// 设置mongoose 静态方法，静态方法在Model层就能使用
 tarSchema.statics.findById = function (userid, callback) {
     return this.find({ userid }, callback);
 };
