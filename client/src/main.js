@@ -4,7 +4,6 @@ import Vue from 'vue';
 import App from './App';
 import Router from 'vue-router';
 import Axios from 'axios';
-import VueTouch from 'vue-touch';
 import flexible from './libs/flexible';
 
 const app = {
@@ -24,9 +23,6 @@ const app = {
             template: '<App/>',
             components: { App }
         });
-        // 事件派发中心，不设计state改变的通知建议使用eventHub
-        // state管理则统一使用vuex
-        window.eventHub = new Vue();
 
         window.$axios = Axios.create({
             // 自动添加在url前面
@@ -37,8 +33,6 @@ const app = {
             withCredentials: true
         });
 
-        // 修正hash
-        this.correctHashRoute();
 
         Object.defineProperty(document, 'setTitle', {
             value: function (t) {
@@ -60,35 +54,11 @@ const app = {
     },
     initPlug () {
         Vue.use(Router);
-        Vue.use(VueTouch);
-
-        VueTouch.config.swipe = {
-            direction: 'horizontal'
-        };
-    },
-    correctHashRoute () {
-        let url = location.href,
-            queryArr = [],
-            queryStr = '',
-
-            splitQuery = str => str.substring(1).split('&'),
-            reg = /^(https?\:\/\/[\w\.\/]+)(\?[^#]+)?(#[^\?&]+)?(.+)?$/,
-            res = reg.exec(url);
-            // console.log(res);
-        if (!res || !res[3]) return;
-
-        if (res[4]) queryArr = queryArr.concat(splitQuery(res[4]));
-        if (res[2]) queryArr = queryArr.concat(splitQuery(res[2]));
-        if (!queryArr.length) return;
-
-        queryArr = [...new Set(queryArr)];
-        queryStr = '?' + queryArr.join('&');
-        location.hash = res[3] + queryStr;
     },
     createRoutes () {
         return [{
             path: '/',
-            name: 'userList', // 个性化好卖榜单
+            name: 'userList', // 用户列表
             component (resolve) {
                 require(['./components/UserList/UserList.vue'], resolve);
             }

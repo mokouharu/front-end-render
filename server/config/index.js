@@ -7,7 +7,6 @@ const db = mongoose.createConnection('mongodb://localhost:3000/test');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-    // we're connected!
     console.log("连接成功");
 });
 

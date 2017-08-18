@@ -60,14 +60,11 @@
     }
 </style>
 <script>
-    import OPTIONS from './options.js';
     import commonAxios from '../../libs/axiosJsonp.js';
 
     export default {
         data () {
             return {
-                commonInterests: [],
-                options: OPTIONS,
                 userList: [{
                     username: '张鹏',
                     age: '12',
@@ -101,17 +98,18 @@
                     headers:{
                         'Content-Type':'application/x-www-form-urlencoded'
                     },
-                    withCredentials:true}).then(res => {
+                    withCredentials:true
+                }).then(res => {
                     if (res) {
-                        console.log('res:', res);
                         this.userList = res;
                     }
                 });
             },
             deleteData () {
-                commonAxios('delete', { userid: '111' }).then(res => {
+                commonAxios('delete', {
+                    userid: '111'
+                }).then(res => {
                     if (res) {
-                        console.log('res:', res);
                         this.userList = res;
                     }
                 });
